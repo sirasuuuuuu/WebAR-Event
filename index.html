@@ -115,6 +115,13 @@
       status.textContent = 'モデルを読み込みました。ARを起動できます。';
     }
 
+    function createARContext() {
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
+      gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+      if (!gl) throw new Error('WebGLコンテキストを作成できませんでした');
+    }
+
     function createARScene() {
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera();
@@ -141,11 +148,7 @@
       reticle.visible = false;
       scene.add(reticle);
 
-      const canvas = document.createElement('canvas');
-      canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
-      gl = canvas.getContext('webgl', { alpha: true, antialias: true, xrCompatible: true });
-      if (!gl) throw new Error('WebGL is unavailable');
-      renderer = new THREE.WebGLRenderer({ canvas, context: gl, alpha: true, antialias: true, preserveDrawingBuffer: true });
+      renderer = new THREE.WebGLRenderer({ canvas: gl.canvas, context: gl, alpha: true, antialias: true, preserveDrawingBuffer: true });
       renderer.setPixelRatio(1);
       renderer.setSize(window.innerWidth, window.innerHeight, false);
       renderer.setClearColor(0x000000, 0);
@@ -219,13 +222,15 @@
       arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
       status.textContent = '';
       try {
-        createARScene();
+        createARContext();
         activeSession = await navigator.xr.requestSession('immersive-ar', {
           requiredFeatures: ['local', 'hit-test'],
           optionalFeatures: ['dom-overlay'],
           domOverlay: { root: arOverlay }
         });
         activeSession.addEventListener('end', cleanupAR, { once: true });
+        await gl.makeXRCompatible();
+        createARScene();
         activeSession.updateRenderState({ baseLayer: new XRWebGLLayer(activeSession, gl, { alpha: true, depth: true }) });
         localSpace = await activeSession.requestReferenceSpace('local');
         const viewerSpace = await activeSession.requestReferenceSpace('viewer');
@@ -234,7 +239,11 @@
         activeSession.requestAnimationFrame(onXRFrame);
       } catch (error) {
         console.error('WebXR start failed', error);
-        status.textContent = 'ARを開始できませんでした。ChromeとGoogle Play開発者サービス（AR）をご確認ください。';
+        const detail = `${error?.name || 'Error'}: ${error?.message || '詳細不明'}`;
+        status.textContent = `AR開始に失敗しました（${detail}）。ページを再読み込みして、ChromeとGoogle Play開発者サービス（AR）をご確認ください。`;
+        if (activeSession) {
+          try { await activeSession.end(); } catch (endError) { console.warn('AR session cleanup failed', endError); }
+        }
         await cleanupAR();
       }
     }
