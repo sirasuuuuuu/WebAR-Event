@@ -48,8 +48,8 @@
         status.textContent = 'ARを起動しました。床や机に向けてスマホをゆっくり動かしてください。';
         arPrompt.textContent = 'カメラを床や机に向け、ゆっくり動かしてください。置きたい場所が見つかったら画面をタップします。';
       } else if (event.detail.status === 'object-placed') {
-        status.textContent = 'キャラクターを配置しました。別の場所をタップすると置き直せます。';
-        arPrompt.textContent = '配置しました。別の場所をタップすると置き直せます。';
+        status.textContent = '床を検出しました。画面上の別の場所をタップすると配置位置を変えられます。';
+        arPrompt.textContent = '床を検出しました。画面上の別の場所をタップすると配置位置を変えられます。';
       } else if (event.detail.status === 'not-presenting') {
         status.textContent = '';
       }
