@@ -28,7 +28,7 @@
     <h1>キャラクターと写真を撮ろう</h1>
     <p>下のボタンからARを起動し、床など平らな場所にキャラクターを置いてください。</p>
     <div id="fallback" class="fallback">モデルを読み込めませんでした。assetsフォルダ内のtest_box.glbとtest_box.usdzを確認してください。</div>
-    <model-viewer id="character" src="assets/test_box.glb" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto">
+    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto">
       <button slot="ar-button" id="ar-button">ARでキャラクターを置く</button>
       <div id="ar-prompt" aria-live="polite">カメラを床や机に向け、ゆっくり動かしてください。置きたい場所が見つかったら画面をタップします。</div>
     </model-viewer>
