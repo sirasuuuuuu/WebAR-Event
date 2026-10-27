@@ -158,8 +158,10 @@
       }
       reticle.matrix.decompose(placedModel.position, placedModel.quaternion, placedModel.scale);
       placedModel.position.y += modelYOffset;
-      placedModel.scale.multiplyScalar(MODEL_SCALE);
+      placedModel.scale.setScalar(MODEL_SCALE);
       placedModel.visible = true;
+      placedModel.updateMatrix();
+      placedModel.updateMatrixWorld(true);
       arMessage.textContent = '配置しました。別の場所をタップすると置き直せます。';
       status.textContent = 'ARに配置しました。';
     }
@@ -184,6 +186,10 @@
             if (pose) {
               reticle.visible = true;
               reticle.matrix.fromArray(pose.transform.matrix);
+              // matrixAutoUpdate is disabled so WebXR's transform can be used
+              // directly. Mark the world matrix dirty whenever that transform changes.
+              reticle.matrixWorldNeedsUpdate = true;
+              reticle.updateMatrixWorld(true);
               if (!placedModel) arMessage.textContent = '青い目印が出ました。置きたい場所に合わせて画面をタップしてください。';
             }
           } else {
