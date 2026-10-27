@@ -118,8 +118,9 @@
     function createARContext() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
-      gl = canvas.getContext('webgl', { alpha: true, antialias: true });
-      if (!gl) throw new Error('WebGLコンテキストを作成できませんでした');
+      // Three.js r163+ requires WebGL 2; WebGL 1 throws during renderer setup.
+      gl = canvas.getContext('webgl2', { alpha: true, antialias: true });
+      if (!gl) throw new Error('WebGL 2コンテキストを作成できませんでした');
     }
 
     function createARScene() {
