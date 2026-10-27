@@ -69,9 +69,9 @@
     let reticle = null;
     let activeSession = null;
     let hitTestSource = null;
-    let localSpace = null;
     let placedModel = null;
-    let lastHitPose = null;
+    let controller = null;
+    let hitTestSourceRequested = false;
 
     const modelReady = loader.loadAsync('assets/test_box.glb?v=2').then((gltf) => {
       modelScene = gltf.scene;
@@ -112,16 +112,26 @@
 
     function createARScene() {
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera();
+      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
       scene.add(new THREE.HemisphereLight(0xffffff, 0x58606b, 1.8));
       const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
       keyLight.position.set(1, 3, 2);
       scene.add(keyLight);
 
-      const ringGeometry = new THREE.RingGeometry(0.075, 0.105, 40);
+      const ringGeometry = new THREE.RingGeometry(0.13, 0.18, 48);
       ringGeometry.rotateX(-Math.PI / 2);
-      reticle = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0x55f2d0 }));
-      reticle.matrixAutoUpdate = true;
+      reticle = new THREE.Group();
+      const markerMaterial = new THREE.MeshBasicMaterial({
+        color: 0x168bff, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false
+      });
+      const ring = new THREE.Mesh(ringGeometry, markerMaterial);
+      ring.renderOrder = 10000;
+      reticle.add(ring);
+      const center = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 12), markerMaterial);
+      center.position.y = 0.025;
+      center.renderOrder = 10000;
+      reticle.add(center);
+      reticle.matrixAutoUpdate = false;
       reticle.visible = false;
       scene.add(reticle);
 
@@ -134,62 +144,71 @@
       renderer.xr.setReferenceSpaceType('local');
       renderer.domElement.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
       document.body.appendChild(renderer.domElement);
+      controller = renderer.xr.getController(0);
+      controller.addEventListener('select', placeModel);
+      scene.add(controller);
     }
 
     function placeModel() {
-      if (!reticle?.visible || !lastHitPose || !modelScene) return;
+      if (!reticle?.visible || !modelScene) return;
       if (!placedModel) {
         placedModel = cloneSkinnedModel(modelScene);
         placedModel.scale.setScalar(MODEL_SCALE);
         scene.add(placedModel);
       }
-      placedModel.position.set(reticle.position.x, reticle.position.y + modelYOffset, reticle.position.z);
-      placedModel.rotation.set(0, 0, 0);
+      reticle.matrix.decompose(placedModel.position, placedModel.quaternion, placedModel.scale);
+      placedModel.position.y += modelYOffset;
+      placedModel.scale.multiplyScalar(MODEL_SCALE);
       placedModel.visible = true;
       arMessage.textContent = '配置しました。別の場所をタップすると置き直せます。';
       status.textContent = 'ARに配置しました。';
     }
 
     function onXRFrame(_time, frame) {
-      if (frame && hitTestSource && localSpace) {
-        const hits = frame.getHitTestResults(hitTestSource);
-        if (hits.length > 0) {
-          const pose = hits[0].getPose(localSpace);
-          if (pose) {
-            lastHitPose = pose;
-            reticle.matrix.fromArray(pose.transform.matrix);
-            reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
-            reticle.visible = true;
-            if (!placedModel) arMessage.textContent = '床の目印が出ました。置きたい場所に合わせて画面をタップしてください。';
+      if (frame) {
+        const session = frame.session;
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        if (!hitTestSourceRequested) {
+          session.requestReferenceSpace('viewer').then((viewerSpace) =>
+            session.requestHitTestSource({ space: viewerSpace })
+          ).then((source) => { hitTestSource = source; }).catch((error) => {
+            console.error('Hit test source failed', error);
+            arMessage.textContent = '床検出を開始できませんでした。AR対応状況をご確認ください。';
+          });
+          hitTestSourceRequested = true;
+        }
+        if (hitTestSource && referenceSpace) {
+          const hits = frame.getHitTestResults(hitTestSource);
+          if (hits.length > 0) {
+            const pose = hits[0].getPose(referenceSpace);
+            if (pose) {
+              reticle.visible = true;
+              reticle.matrix.fromArray(pose.transform.matrix);
+              if (!placedModel) arMessage.textContent = '青い目印が出ました。置きたい場所に合わせて画面をタップしてください。';
+            }
+          } else {
+            reticle.visible = false;
+            if (!placedModel) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
           }
-        } else {
-          reticle.visible = false;
-          lastHitPose = null;
-          if (!placedModel) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
         }
       }
       if (renderer && scene && camera) renderer.render(scene, camera);
     }
 
     async function startAndroidAR() {
-      const sessionPromise = navigator.xr.requestSession('immersive-ar', {
-        requiredFeatures: ['local', 'hit-test'],
-        optionalFeatures: ['dom-overlay'],
-        domOverlay: { root: arOverlay }
-      });
       arOverlay.hidden = false;
       arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
       status.textContent = '';
       createARScene();
+      renderer.setAnimationLoop(onXRFrame);
       try {
-        activeSession = await sessionPromise;
-        await renderer.xr.setSession(activeSession);
-        const viewerSpace = await activeSession.requestReferenceSpace('viewer');
-        localSpace = await activeSession.requestReferenceSpace('local');
-        hitTestSource = await activeSession.requestHitTestSource({ space: viewerSpace });
-        activeSession.addEventListener('select', placeModel);
+        activeSession = await navigator.xr.requestSession('immersive-ar', {
+        requiredFeatures: ['local', 'hit-test'],
+        optionalFeatures: ['dom-overlay'],
+        domOverlay: { root: arOverlay }
+        });
         activeSession.addEventListener('end', cleanupAR, { once: true });
-        renderer.setAnimationLoop(onXRFrame);
+        await renderer.xr.setSession(activeSession);
       } catch (error) {
         console.error('WebXR start failed', error);
         status.textContent = 'ARを開始できませんでした。ChromeとGoogle Play開発者サービス（AR）をご確認ください。';
@@ -204,14 +223,15 @@
         renderer.domElement.remove();
       }
       if (hitTestSource) hitTestSource.cancel();
+      if (controller) controller.removeEventListener('select', placeModel);
       renderer = null;
       scene = null;
       camera = null;
       reticle = null;
       placedModel = null;
       hitTestSource = null;
-      localSpace = null;
-      lastHitPose = null;
+      controller = null;
+      hitTestSourceRequested = false;
       activeSession = null;
       arOverlay.hidden = true;
     }
