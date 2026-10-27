@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#111827">
   <title>キャラクターAR体験</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.183.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.183.0/examples/jsm/"}}
+  </script>
   <style>
     :root { color-scheme: dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
     * { box-sizing: border-box; }
@@ -13,54 +16,215 @@
     main { width: min(100%, 680px); text-align: center; }
     h1 { font-size: clamp(1.5rem, 6vw, 2.2rem); margin: 0 0 8px; }
     p { line-height: 1.65; color: #d1d5db; }
-    model-viewer { width: 100%; height: min(62vh, 520px); min-height: 320px; background: #1f2937; border-radius: 18px; --poster-color: #1f2937; }
-    #ar-button { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); border: 0; border-radius: 999px; padding: 14px 22px; font-size: 1rem; font-weight: 700; color: #111827; background: #a7f3d0; white-space: nowrap; }
-    #ar-prompt { display: none; position: absolute; z-index: 2; left: 50%; bottom: 76px; transform: translateX(-50%); width: min(88%, 440px); padding: 12px 16px; border-radius: 14px; background: rgb(17 24 39 / 88%); color: #fff; font-size: .95rem; line-height: 1.5; box-shadow: 0 4px 18px rgb(0 0 0 / 30%); pointer-events: none; }
-    model-viewer[ar-status="session-started"] #ar-prompt,
-    model-viewer[ar-status="object-placed"] #ar-prompt { display: block; }
-    #status { min-height: 1.5em; font-size: .92rem; }
+    model-viewer { width: 100%; height: min(58vh, 500px); min-height: 300px; background: #1f2937; border-radius: 18px; --poster-color: #1f2937; }
+    model-viewer::part(default-ar-button) { display: none; }
+    #start-ar { display: block; width: min(100%, 420px); margin: 16px auto 8px; padding: 15px 22px; border: 0; border-radius: 999px; background: #a7f3d0; color: #111827; font-size: 1rem; font-weight: 700; }
+    #start-ar[hidden] { display: none; }
+    #status { min-height: 1.5em; font-size: .95rem; }
     .hint { font-size: .85rem; }
     .fallback { display: none; padding: 12px; border: 1px solid #fbbf24; border-radius: 12px; color: #fde68a; }
+    #ar-overlay[hidden] { display: none; }
+    #ar-overlay { position: fixed; inset: 0; z-index: 100; pointer-events: none; color: white; font-size: 16px; }
+    #ar-message { position: absolute; top: max(16px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: min(90vw, 460px); padding: 12px 16px; border-radius: 14px; background: rgb(17 24 39 / 88%); line-height: 1.45; text-align: center; }
+    #end-ar { position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); padding: 11px 16px; border: 0; border-radius: 999px; background: white; color: #111827; font-weight: 700; pointer-events: auto; }
+    @media (max-width: 520px) { body { padding: 16px; } model-viewer { min-height: 280px; } #ar-message { top: max(76px, calc(env(safe-area-inset-top) + 68px)); } }
   </style>
 </head>
 <body>
   <main>
     <h1>キャラクターと写真を撮ろう</h1>
-    <p>下のボタンからARを起動し、床など平らな場所にキャラクターを置いてください。</p>
+    <p>下の3Dモデルを確認し、ボタンからARを起動してください。</p>
     <div id="fallback" class="fallback">モデルを読み込めませんでした。assetsフォルダ内のtest_box.glbとtest_box.usdzを確認してください。</div>
-    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto">
-      <button slot="ar-button" id="ar-button">ARでキャラクターを置く</button>
-      <div id="ar-prompt" aria-live="polite">カメラを床や机に向け、ゆっくり動かしてください。置きたい場所が見つかったら画面をタップします。</div>
-    </model-viewer>
-    <p id="status" role="status" aria-live="polite"></p>
-    <p class="hint">ARが始まらない場合は、対応するスマートフォンの標準ブラウザで開いてください。</p>
+    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="quick-look" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto"></model-viewer>
+    <button id="start-ar" type="button" hidden>ARでキャラクターを置く</button>
+    <p id="status" role="status" aria-live="polite">テストモデルを準備しています。</p>
+    <p class="hint">Androidはブラウザ内AR、iPhoneはQuick Lookで表示します。床の目印が出たら置きたい場所をタップしてください。</p>
   </main>
-  <script>
+  <div id="ar-overlay" hidden>
+    <div id="ar-message" role="status" aria-live="polite">カメラを床や机に向けて、ゆっくり動かしてください。</div>
+    <button id="end-ar" type="button">終了</button>
+  </div>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { clone as cloneSkinnedModel } from 'three/addons/utils/SkeletonUtils.js';
+
     const viewer = document.querySelector('#character');
     const fallback = document.querySelector('#fallback');
+    const startButton = document.querySelector('#start-ar');
     const status = document.querySelector('#status');
-    const arPrompt = document.querySelector('#ar-prompt');
+    const arOverlay = document.querySelector('#ar-overlay');
+    const arMessage = document.querySelector('#ar-message');
+    const endButton = document.querySelector('#end-ar');
+    const MODEL_SCALE = 0.25;
+    const loader = new GLTFLoader();
+    const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    let modelScene = null;
+    let modelYOffset = 0;
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+    let reticle = null;
+    let activeSession = null;
+    let hitTestSource = null;
+    let localSpace = null;
+    let placedModel = null;
+    let lastHitPose = null;
+
+    const modelReady = loader.loadAsync('assets/test_box.glb?v=2').then((gltf) => {
+      modelScene = gltf.scene;
+      const bounds = new THREE.Box3().setFromObject(modelScene);
+      modelYOffset = -bounds.min.y * MODEL_SCALE;
+      status.textContent = 'モデルを読み込みました。ARを起動できます。';
+      return modelScene;
+    }).catch((error) => {
+      console.error('GLB load failed', error);
+      fallback.style.display = 'block';
+      status.textContent = 'AR用モデルを読み込めませんでした。通信状態をご確認ください。';
+      return null;
+    });
+
     viewer.addEventListener('error', () => { fallback.style.display = 'block'; });
     viewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'failed') {
-        status.textContent = 'ARを起動できませんでした。対応端末・ブラウザをご確認ください。';
-      } else if (event.detail.status === 'session-started') {
-        status.textContent = 'ARを起動しました。床や机に向けてスマホをゆっくり動かしてください。';
-        arPrompt.textContent = 'カメラを床や机に向け、ゆっくり動かしてください。置きたい場所が見つかったら画面をタップします。';
-      } else if (event.detail.status === 'object-placed') {
-        status.textContent = '床を検出しました。画面上の別の場所をタップすると配置位置を変えられます。';
-        arPrompt.textContent = '床を検出しました。画面上の別の場所をタップすると配置位置を変えられます。';
-      } else if (event.detail.status === 'not-presenting') {
-        status.textContent = '';
+        status.textContent = 'iPhoneのARを起動できませんでした。Safariで開いてください。';
       }
     });
-    viewer.addEventListener('ar-tracking', (event) => {
-      if (event.detail.status === 'not-tracking') {
-        arPrompt.textContent = '位置を見失いました。明るく模様のある床や机に向け、スマホをゆっくり動かしてください。';
-      } else if (viewer.getAttribute('ar-status') === 'session-started') {
-        arPrompt.textContent = '位置を追跡中です。床や机に向けてゆっくり動かし、置きたい場所をタップしてください。';
+
+    async function showARButtonWhenReady() {
+      const model = await modelReady;
+      if (!model) return;
+      if (isAppleMobile) {
+        startButton.hidden = false;
+        startButton.textContent = 'Quick LookでARを見る';
+        status.textContent = 'モデルを読み込みました。ARを起動できます。';
+        return;
+      }
+      if (!navigator.xr || !(await navigator.xr.isSessionSupported('immersive-ar').catch(() => false))) {
+        status.textContent = 'このブラウザではWebARを利用できません。AndroidのChromeで開いてください。';
+        return;
+      }
+      startButton.hidden = false;
+      status.textContent = 'モデルを読み込みました。ARを起動できます。';
+    }
+
+    function createARScene() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera();
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x58606b, 1.8));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+      keyLight.position.set(1, 3, 2);
+      scene.add(keyLight);
+
+      const ringGeometry = new THREE.RingGeometry(0.075, 0.105, 40);
+      ringGeometry.rotateX(-Math.PI / 2);
+      reticle = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0x55f2d0 }));
+      reticle.matrixAutoUpdate = true;
+      reticle.visible = false;
+      scene.add(reticle);
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.xr.enabled = true;
+      renderer.xr.setReferenceSpaceType('local');
+      renderer.domElement.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
+      document.body.appendChild(renderer.domElement);
+    }
+
+    function placeModel() {
+      if (!reticle?.visible || !lastHitPose || !modelScene) return;
+      if (!placedModel) {
+        placedModel = cloneSkinnedModel(modelScene);
+        placedModel.scale.setScalar(MODEL_SCALE);
+        scene.add(placedModel);
+      }
+      placedModel.position.set(reticle.position.x, reticle.position.y + modelYOffset, reticle.position.z);
+      placedModel.rotation.set(0, 0, 0);
+      placedModel.visible = true;
+      arMessage.textContent = '配置しました。別の場所をタップすると置き直せます。';
+      status.textContent = 'ARに配置しました。';
+    }
+
+    function onXRFrame(_time, frame) {
+      if (frame && hitTestSource && localSpace) {
+        const hits = frame.getHitTestResults(hitTestSource);
+        if (hits.length > 0) {
+          const pose = hits[0].getPose(localSpace);
+          if (pose) {
+            lastHitPose = pose;
+            reticle.matrix.fromArray(pose.transform.matrix);
+            reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+            reticle.visible = true;
+            if (!placedModel) arMessage.textContent = '床の目印が出ました。置きたい場所に合わせて画面をタップしてください。';
+          }
+        } else {
+          reticle.visible = false;
+          lastHitPose = null;
+          if (!placedModel) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
+        }
+      }
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    async function startAndroidAR() {
+      const sessionPromise = navigator.xr.requestSession('immersive-ar', {
+        requiredFeatures: ['local', 'hit-test'],
+        optionalFeatures: ['dom-overlay'],
+        domOverlay: { root: arOverlay }
+      });
+      arOverlay.hidden = false;
+      arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
+      status.textContent = '';
+      createARScene();
+      try {
+        activeSession = await sessionPromise;
+        await renderer.xr.setSession(activeSession);
+        const viewerSpace = await activeSession.requestReferenceSpace('viewer');
+        localSpace = await activeSession.requestReferenceSpace('local');
+        hitTestSource = await activeSession.requestHitTestSource({ space: viewerSpace });
+        activeSession.addEventListener('select', placeModel);
+        activeSession.addEventListener('end', cleanupAR, { once: true });
+        renderer.setAnimationLoop(onXRFrame);
+      } catch (error) {
+        console.error('WebXR start failed', error);
+        status.textContent = 'ARを開始できませんでした。ChromeとGoogle Play開発者サービス（AR）をご確認ください。';
+        await cleanupAR();
+      }
+    }
+
+    async function cleanupAR() {
+      if (renderer) {
+        renderer.setAnimationLoop(null);
+        renderer.dispose();
+        renderer.domElement.remove();
+      }
+      if (hitTestSource) hitTestSource.cancel();
+      renderer = null;
+      scene = null;
+      camera = null;
+      reticle = null;
+      placedModel = null;
+      hitTestSource = null;
+      localSpace = null;
+      lastHitPose = null;
+      activeSession = null;
+      arOverlay.hidden = true;
+    }
+
+    startButton.addEventListener('click', () => {
+      if (isAppleMobile) {
+        viewer.activateAR();
+      } else {
+        startAndroidAR();
       }
     });
+    endButton.addEventListener('click', () => activeSession?.end());
+    showARButtonWhenReady();
   </script>
 </body>
 </html>

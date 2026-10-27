@@ -15,7 +15,7 @@ QRコードでこのページを開き、ブラウザからキャラクターを
 
 - GitHub Pagesは静的ファイルを公開するサービスです。利用者データの保存やログイン機能は含みません。
 - ARの対応状況は端末・ブラウザにより異なります。イベントで使う端末で事前確認してください。
-- `index.html` は model-viewer 4.0.0をGoogle CDNから読み込みます。ページの表示にはインターネット接続が必要です。
+- `index.html` はmodel-viewer 4.0.0をGoogle CDN、Three.js 0.183.0をjsDelivrから読み込みます。ページの表示とARにはインターネット接続が必要です。
 - 公開リポジトリには公開してよい素材だけを入れてください。
 
 ## GitHub Pagesで公開
@@ -29,7 +29,7 @@ QRコードでこのページを開き、ブラウザからキャラクターを
 ## 動作確認
 
 - PCブラウザで箱の3Dモデルが表示されることを確認。
-- AndroidのChromeではWebXRを優先してブラウザ内ARを起動し、非対応の場合はScene Viewerへ切り替わることを確認。
+- AndroidのChromeでは、Three.jsとWebXR Hit Testでブラウザ内ARを起動し、目印をタップして配置できることを確認。iPhoneのSafariではmodel-viewerからQuick Lookを起動。
 - iPhoneのSafariでARボタンを押し、Quick Lookが起動するか確認。
 - QRコードから直接開く経路も試します。アプリ内ブラウザで失敗する場合は、Safari/Chromeで開く案内をします。
 - 会場の照明、床、通信状況を含めてリハーサルします。
