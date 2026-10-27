@@ -29,7 +29,7 @@ QRコードでこのページを開き、ブラウザからキャラクターを
 ## 動作確認
 
 - PCブラウザで箱の3Dモデルが表示されることを確認。
-- AndroidのChromeでARボタンを押し、Scene Viewerが起動するか確認。
+- AndroidのChromeではWebXRを優先してブラウザ内ARを起動し、非対応の場合はScene Viewerへ切り替わることを確認。
 - iPhoneのSafariでARボタンを押し、Quick Lookが起動するか確認。
 - QRコードから直接開く経路も試します。アプリ内ブラウザで失敗する場合は、Safari/Chromeで開く案内をします。
 - 会場の照明、床、通信状況を含めてリハーサルします。

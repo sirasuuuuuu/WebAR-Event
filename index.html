@@ -25,7 +25,7 @@
     <h1>キャラクターと写真を撮ろう</h1>
     <p>下のボタンからARを起動し、床など平らな場所にキャラクターを置いてください。</p>
     <div id="fallback" class="fallback">モデルを読み込めませんでした。assetsフォルダ内のtest_box.glbとtest_box.usdzを確認してください。</div>
-    <model-viewer id="character" src="assets/test_box.glb" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="scene-viewer quick-look" ar-placement="floor" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto">
+    <model-viewer id="character" src="assets/test_box.glb" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto">
       <button slot="ar-button" id="ar-button">ARでキャラクターを置く</button>
     </model-viewer>
     <p id="status" role="status" aria-live="polite"></p>
@@ -43,4 +43,3 @@
   </script>
 </body>
 </html>
-
