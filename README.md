@@ -4,10 +4,12 @@ QRコードでこのページを開き、ブラウザからキャラクターを
 
 ## テストモデル
 
-- `assets/test_box.glb`：Android向けのGLBモデル
+- `assets/test_box.glb`：Android向けのGLBモデル。元形状は2m角で、ページ上では0.25倍して表示します
 - `assets/test_box.usdc`：Blenderから書き出した元データ
-- `assets/test_box.usdz`：上記USDCをBlender 5.2でUSDZに変換したiPhone向けモデル
+- `assets/test_box.usdz`：iPhone Quick Look向け。GLBと同じシアン系マテリアルを設定し、形状自体を0.25倍して約50cm角にしたUSDZ
 - ページは現在 `test_box.glb` と `test_box.usdz` を読み込みます。
+
+Quick Lookでは `ios-src` に指定したUSDZが使われるため、ページの `scale` 属性だけではiPhone側のモデルサイズは変わりません。USDZ内の形状を目的の実寸にして書き出し、`ar-scale="fixed"` でQuick Look上の拡大縮小を無効にしています。
 
 テストモデルは簡単な箱です。キャラクターに差し替えるときは、両モデルを `assets/character.glb` と `assets/character.usdz` に置き、`index.html` の `src` と `ios-src` をその名前に変更します。
 

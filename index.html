@@ -37,7 +37,7 @@
     <h1>キャラクターと写真を撮ろう</h1>
     <p>下の3Dモデルを確認し、ボタンからARを起動してください。</p>
     <div id="fallback" class="fallback">モデルを読み込めませんでした。assetsフォルダ内のtest_box.glbとtest_box.usdzを確認してください。</div>
-    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz" alt="イベントキャラクターの3Dモデル" ar ar-modes="quick-look" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto"></model-viewer>
+    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz?v=ios-050m-cyan" alt="イベントキャラクターの3Dモデル" ar ar-modes="quick-look" ar-scale="fixed" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto"></model-viewer>
     <button id="start-ar" type="button" hidden>ARでキャラクターを置く</button>
     <p id="status" role="status" aria-live="polite">テストモデルを準備しています。</p>
     <p class="hint">Androidはブラウザ内AR、iPhoneはQuick Lookで表示します。床の目印が出たら置きたい場所をタップしてください。</p>
