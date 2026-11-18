@@ -12,16 +12,16 @@
   <style>
     :root { color-scheme: dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: #111827; color: #fff; display: grid; place-items: center; padding: 20px; }
-    main { width: min(100%, 680px); text-align: center; }
-    h1 { font-size: clamp(1.5rem, 6vw, 2.2rem); margin: 0 0 8px; }
+    body { margin: 0; min-height: 100vh; background: #111827; color: #fff; display: grid; place-items: center; padding: 24px; }
+    main { width: min(100%, 520px); text-align: center; }
+    h1 { font-size: clamp(1.5rem, 6vw, 2.1rem); margin: 0 0 10px; }
     p { line-height: 1.65; color: #d1d5db; }
-    model-viewer { width: 100%; height: min(58vh, 500px); min-height: 300px; background: #1f2937; border-radius: 18px; --poster-color: #1f2937; }
-    model-viewer::part(default-ar-button) { display: none; }
-    #start-ar { display: block; width: min(100%, 420px); margin: 16px auto 8px; padding: 15px 22px; border: 0; border-radius: 999px; background: #a7f3d0; color: #111827; font-size: 1rem; font-weight: 700; }
-    #start-ar[hidden] { display: none; }
+    #spot-label { color: #a7f3d0; font-weight: 700; margin: 0 0 12px; }
+    #character { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    #start-ar { display: block; width: min(100%, 420px); margin: 22px auto 10px; padding: 17px 22px; border: 0; border-radius: 999px; background: #a7f3d0; color: #111827; font-size: 1.08rem; font-weight: 800; }
+    #start-ar:disabled { opacity: .55; }
     #status { min-height: 1.5em; font-size: .95rem; }
-    .hint { font-size: .85rem; }
+    .hint { font-size: .86rem; }
     .fallback { display: none; padding: 12px; border: 1px solid #fbbf24; border-radius: 12px; color: #fde68a; }
     #ar-overlay[hidden] { display: none; }
     #ar-overlay { position: fixed; inset: 0; z-index: 100; pointer-events: none; color: white; font-size: 16px; }
@@ -29,22 +29,26 @@
     #hit-marker { display: none; position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; transform: translate(-50%, -50%); border: 5px solid #168bff; border-radius: 50%; box-shadow: 0 0 0 4px #fff, 0 0 22px 10px rgb(22 139 255 / 75%); }
     #hit-marker::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; transform: translate(-50%, -50%); border-radius: 50%; background: #168bff; box-shadow: 0 0 0 3px #fff; }
     #end-ar { position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); padding: 11px 16px; border: 0; border-radius: 999px; background: white; color: #111827; font-weight: 700; pointer-events: auto; }
-    @media (max-width: 520px) { body { padding: 16px; } model-viewer { min-height: 280px; } #ar-message { top: max(76px, calc(env(safe-area-inset-top) + 68px)); } }
+    #explanation { display: none; position: absolute; left: 50%; bottom: max(30px, env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(88vw, 460px); padding: 16px 18px; border: 2px solid white; border-radius: 18px; background: rgb(17 24 39 / 92%); line-height: 1.6; text-align: left; white-space: pre-wrap; box-shadow: 0 4px 24px #0008; }
+    #explanation::before { content: ""; position: absolute; left: 50%; top: -11px; width: 18px; height: 18px; background: #172033; border-left: 2px solid white; border-top: 2px solid white; transform: translateX(-50%) rotate(45deg); }
+    @media (max-width: 520px) { body { padding: 20px; } #ar-message { top: max(76px, calc(env(safe-area-inset-top) + 68px)); } }
   </style>
 </head>
 <body>
   <main>
-    <h1>キャラクターと写真を撮ろう</h1>
-    <p>下の3Dモデルを確認し、ボタンからARを起動してください。</p>
-    <div id="fallback" class="fallback">モデルを読み込めませんでした。assetsフォルダ内のtest_box.glbとtest_box.usdzを確認してください。</div>
-    <model-viewer id="character" src="assets/test_box.glb?v=2" ios-src="assets/test_box.usdz?v=ios-050m-cyan" alt="イベントキャラクターの3Dモデル" ar ar-modes="quick-look" ar-scale="fixed" scale="0.25 0.25 0.25" camera-controls shadow-intensity="1" exposure="1" interaction-prompt="auto"></model-viewer>
-    <button id="start-ar" type="button" hidden>ARでキャラクターを置く</button>
-    <p id="status" role="status" aria-live="polite">テストモデルを準備しています。</p>
-    <p class="hint">Androidはブラウザ内AR、iPhoneはQuick Lookで表示します。床の目印が出たら置きたい場所をタップしてください。</p>
+    <p id="spot-label">イベントAR</p>
+    <h1 id="title">キャラクターに会いに行こう</h1>
+    <p id="intro">キャラクターをこの場所に登場させます。</p>
+    <div id="fallback" class="fallback">モデルを読み込めませんでした。assets/character.glb と assets/character.usdz を確認してください。</div>
+    <model-viewer id="character" src="assets/character.glb" ios-src="assets/character.usdz" alt="イベントキャラクター" ar ar-modes="quick-look" ar-scale="fixed" camera-controls></model-viewer>
+    <button id="start-ar" type="button" disabled>モデルを読み込んでいます…</button>
+    <p id="status" role="status" aria-live="polite">読み込み中です。</p>
+    <p class="hint">ボタンを押すとカメラが起動します。Androidは床や机を検出後にタップして配置、iPhoneはQuick Lookで表示します。</p>
   </main>
   <div id="ar-overlay" hidden>
-    <div id="ar-message" role="status" aria-live="polite">カメラを床や机に向けて、ゆっくり動かしてください。</div>
+    <div id="ar-message" role="status" aria-live="polite">床や机に向けて、ゆっくり動かしてください。</div>
     <div id="hit-marker" aria-hidden="true"></div>
+    <div id="explanation" role="status" aria-live="polite"></div>
     <button id="end-ar" type="button">終了</button>
   </div>
   <script type="module">
@@ -59,14 +63,19 @@
     const arOverlay = document.querySelector('#ar-overlay');
     const arMessage = document.querySelector('#ar-message');
     const hitMarker = document.querySelector('#hit-marker');
+    const explanationPanel = document.querySelector('#explanation');
     const endButton = document.querySelector('#end-ar');
-    const MODEL_SCALE = 0.25;
     const loader = new GLTFLoader();
     const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const spotId = new URLSearchParams(location.search).get('spot') || '01';
+    let xrSupported = false;
 
+    let spot = null;
     let modelScene = null;
+    let modelScale = 1;
     let modelYOffset = 0;
+    let modelHeight = 0;
     let renderer = null;
     let gl = null;
     let scene = null;
@@ -75,50 +84,61 @@
     let activeSession = null;
     let hitTestSource = null;
     let localSpace = null;
+    let placedGroup = null;
     let placedModel = null;
     let lastHitMatrix = null;
+    let explanationTimer = null;
 
-    const modelReady = loader.loadAsync('assets/test_box.glb?v=2').then((gltf) => {
+    async function loadSpot() {
+      const response = await fetch('spots.json');
+      if (!response.ok) throw new Error('spots.json を読み込めません');
+      const spots = await response.json();
+      spot = spots[spotId] || spots['01'];
+      document.title = `${spot.label} | キャラクターAR体験`;
+      document.querySelector('#spot-label').textContent = spot.label;
+      document.querySelector('#title').textContent = spot.title || 'キャラクターに会いに行こう';
+      document.querySelector('#intro').textContent = spot.intro || 'キャラクターをこの場所に登場させます。';
+      viewer.setAttribute('src', `${spot.modelGlb}?v=${spot.version || '1'}`);
+      viewer.setAttribute('ios-src', `${spot.modelUsdz}?v=${spot.version || '1'}`);
+      return spot;
+    }
+
+    const modelReady = loadSpot().then(async () => {
+      const gltf = await loader.loadAsync(`${spot.modelGlb}?v=${spot.version || '1'}`);
       modelScene = gltf.scene;
       const bounds = new THREE.Box3().setFromObject(modelScene);
-      modelYOffset = -bounds.min.y * MODEL_SCALE;
-      status.textContent = 'モデルを読み込みました。ARを起動できます。';
+      const size = bounds.getSize(new THREE.Vector3());
+      modelScale = Number(spot.modelScale ?? 1);
+      modelYOffset = -bounds.min.y * modelScale;
+      modelHeight = size.y * modelScale;
+      if (!isAppleMobile) {
+        xrSupported = !!navigator.xr && await navigator.xr.isSessionSupported('immersive-ar').catch(() => false);
+        if (!xrSupported) {
+          status.textContent = 'この端末ではWebARを利用できません。AndroidのChromeで開いてください。';
+          startButton.textContent = 'この端末ではARを利用できません';
+          return modelScene;
+        }
+      }
+      status.textContent = '準備ができました。ボタンを押してARを開始してください。';
+      startButton.disabled = false;
+      startButton.textContent = 'ARを開始する';
       return modelScene;
     }).catch((error) => {
-      console.error('GLB load failed', error);
+      console.error('AR model load failed', error);
       fallback.style.display = 'block';
-      status.textContent = 'AR用モデルを読み込めませんでした。通信状態をご確認ください。';
+      status.textContent = 'モデルまたはスポット設定を読み込めませんでした。通信状態をご確認ください。';
+      startButton.textContent = '読み込みエラー';
       return null;
     });
 
     viewer.addEventListener('error', () => { fallback.style.display = 'block'; });
     viewer.addEventListener('ar-status', (event) => {
-      if (event.detail.status === 'failed') {
-        status.textContent = 'iPhoneのARを起動できませんでした。Safariで開いてください。';
-      }
+      if (event.detail.status === 'failed') status.textContent = 'iPhoneのARを起動できませんでした。Safariで開いてください。';
     });
-
-    async function showARButtonWhenReady() {
-      const model = await modelReady;
-      if (!model) return;
-      if (isAppleMobile) {
-        startButton.hidden = false;
-        startButton.textContent = 'Quick LookでARを見る';
-        status.textContent = 'モデルを読み込みました。ARを起動できます。';
-        return;
-      }
-      if (!navigator.xr || !(await navigator.xr.isSessionSupported('immersive-ar').catch(() => false))) {
-        status.textContent = 'このブラウザではWebARを利用できません。AndroidのChromeで開いてください。';
-        return;
-      }
-      startButton.hidden = false;
-      status.textContent = 'モデルを読み込みました。ARを起動できます。';
-    }
 
     function createARContext() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99;pointer-events:none;';
-      // Three.js r163+ requires WebGL 2; WebGL 1 throws during renderer setup.
       gl = canvas.getContext('webgl2', { alpha: true, antialias: true });
       if (!gl) throw new Error('WebGL 2コンテキストを作成できませんでした');
     }
@@ -131,13 +151,10 @@
       const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
       keyLight.position.set(1, 3, 2);
       scene.add(keyLight);
-
       const ringGeometry = new THREE.RingGeometry(0.13, 0.18, 48);
       ringGeometry.rotateX(-Math.PI / 2);
       reticle = new THREE.Group();
-      const markerMaterial = new THREE.MeshBasicMaterial({
-        color: 0x168bff, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false
-      });
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x168bff, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false });
       const ring = new THREE.Mesh(ringGeometry, markerMaterial);
       ring.renderOrder = 10000;
       reticle.add(ring);
@@ -148,7 +165,6 @@
       reticle.matrixAutoUpdate = false;
       reticle.visible = false;
       scene.add(reticle);
-
       renderer = new THREE.WebGLRenderer({ canvas: gl.canvas, context: gl, alpha: true, antialias: true, preserveDrawingBuffer: true });
       renderer.setPixelRatio(1);
       renderer.setSize(window.innerWidth, window.innerHeight, false);
@@ -158,20 +174,40 @@
       document.body.appendChild(renderer.domElement);
     }
 
+    function showExplanationAfterDelay() {
+      clearTimeout(explanationTimer);
+      explanationPanel.style.display = 'none';
+      if (!spot.explanation) return;
+      explanationTimer = setTimeout(() => {
+        explanationPanel.textContent = spot.explanation;
+        explanationPanel.style.display = 'block';
+      }, Math.max(0, Number(spot.explanationDelayMs ?? 2500)));
+    }
+
     function placeModel() {
       if (!lastHitMatrix || !modelScene) return;
-      if (!placedModel) {
+      if (!placedGroup) {
+        placedGroup = new THREE.Group();
         placedModel = cloneSkinnedModel(modelScene);
-        scene.add(placedModel);
+        placedModel.position.y = modelYOffset;
+        placedModel.scale.setScalar(modelScale);
+        placedGroup.add(placedModel);
+        scene.add(placedGroup);
+        if (spot.companionModelGlb) {
+          loader.load(spot.companionModelGlb, (gltf) => {
+            const companion = gltf.scene;
+            companion.position.set(0, modelYOffset + modelHeight + Number(spot.companionYOffset ?? 0.12), 0);
+            companion.scale.setScalar(Number(spot.companionScale ?? 1));
+            placedGroup.add(companion);
+          }, undefined, (error) => console.warn('Companion model load failed', error));
+        }
       }
-      lastHitMatrix.decompose(placedModel.position, placedModel.quaternion, placedModel.scale);
-      placedModel.position.y += modelYOffset;
-      placedModel.scale.setScalar(MODEL_SCALE);
-      placedModel.visible = true;
-      placedModel.updateMatrix();
-      placedModel.updateMatrixWorld(true);
+      lastHitMatrix.decompose(placedGroup.position, placedGroup.quaternion, placedGroup.scale);
+      placedGroup.visible = true;
+      placedGroup.updateMatrixWorld(true);
       arMessage.textContent = '配置しました。別の場所をタップすると置き直せます。';
       status.textContent = 'ARに配置しました。';
+      showExplanationAfterDelay();
     }
 
     function onXRFrame(_time, frame) {
@@ -179,10 +215,8 @@
       session.requestAnimationFrame(onXRFrame);
       const layer = session.renderState.baseLayer;
       gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
-
       const viewerPose = frame.getViewerPose(localSpace);
       if (!viewerPose) return;
-
       if (hitTestSource) {
         const hits = frame.getHitTestResults(hitTestSource);
         const pose = hits.length ? hits[0].getPose(localSpace) : null;
@@ -193,15 +227,14 @@
           reticle.updateMatrixWorld(true);
           reticle.visible = true;
           hitMarker.style.display = 'block';
-          if (!placedModel) arMessage.textContent = '青い目印が出ました。置きたい場所に合わせて画面をタップしてください。';
+          if (!placedGroup) arMessage.textContent = '青い目印が出ました。ここに置くには画面をタップしてください。';
         } else {
           lastHitMatrix = null;
           reticle.visible = false;
           hitMarker.style.display = 'none';
-          if (!placedModel) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
+          if (!placedGroup) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
         }
       }
-
       for (const view of viewerPose.views) {
         const viewport = layer.getViewport(view);
         gl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
@@ -220,14 +253,13 @@
     async function startAndroidAR() {
       arOverlay.hidden = false;
       hitMarker.style.display = 'none';
+      explanationPanel.style.display = 'none';
       arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
       status.textContent = '';
       try {
         createARContext();
         activeSession = await navigator.xr.requestSession('immersive-ar', {
-          requiredFeatures: ['local', 'hit-test'],
-          optionalFeatures: ['dom-overlay'],
-          domOverlay: { root: arOverlay }
+          requiredFeatures: ['local', 'hit-test'], optionalFeatures: ['dom-overlay'], domOverlay: { root: arOverlay }
         });
         activeSession.addEventListener('end', cleanupAR, { once: true });
         await gl.makeXRCompatible();
@@ -241,44 +273,28 @@
       } catch (error) {
         console.error('WebXR start failed', error);
         const detail = `${error?.name || 'Error'}: ${error?.message || '詳細不明'}`;
-        status.textContent = `AR開始に失敗しました（${detail}）。ページを再読み込みして、ChromeとGoogle Play開発者サービス（AR）をご確認ください。`;
-        if (activeSession) {
-          try { await activeSession.end(); } catch (endError) { console.warn('AR session cleanup failed', endError); }
-        }
+        status.textContent = `AR開始に失敗しました（${detail}）。ChromeとGoogle Play開発者サービス（AR）をご確認ください。`;
+        if (activeSession) { try { await activeSession.end(); } catch (endError) { console.warn('AR session cleanup failed', endError); } }
         await cleanupAR();
       }
     }
 
     async function cleanupAR() {
-      if (renderer) {
-        renderer.dispose();
-        renderer.domElement.remove();
-      }
+      clearTimeout(explanationTimer);
+      if (renderer) { renderer.dispose(); renderer.domElement.remove(); }
       if (hitTestSource) hitTestSource.cancel();
       if (activeSession) activeSession.removeEventListener('select', placeModel);
-      renderer = null;
-      gl = null;
-      scene = null;
-      camera = null;
-      reticle = null;
-      placedModel = null;
-      hitTestSource = null;
-      localSpace = null;
-      lastHitMatrix = null;
-      activeSession = null;
-      hitMarker.style.display = 'none';
-      arOverlay.hidden = true;
+      renderer = null; gl = null; scene = null; camera = null; reticle = null; placedGroup = null; placedModel = null;
+      hitTestSource = null; localSpace = null; lastHitMatrix = null; activeSession = null;
+      hitMarker.style.display = 'none'; explanationPanel.style.display = 'none'; arOverlay.hidden = true;
     }
 
     startButton.addEventListener('click', () => {
-      if (isAppleMobile) {
-        viewer.activateAR();
-      } else {
-        startAndroidAR();
-      }
+      if (startButton.disabled) return;
+      if (isAppleMobile) viewer.activateAR();
+      else if (xrSupported) startAndroidAR();
     });
     endButton.addEventListener('click', () => activeSession?.end());
-    showARButtonWhenReady();
   </script>
 </body>
 </html>
