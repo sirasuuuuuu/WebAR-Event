@@ -73,6 +73,8 @@
 
     let spot = null;
     let modelScene = null;
+    let companionScene = null;
+    let companionLoadError = null;
     let modelScale = 1;
     let modelYOffset = 0;
     let modelHeight = 0;
@@ -90,7 +92,9 @@
     let explanationTimer = null;
 
     async function loadSpot() {
-      const response = await fetch('spots.json');
+      // GitHub Pages may cache JSON responses for 10 minutes. Use a unique URL
+      // so a newly published spot configuration reaches phones immediately.
+      const response = await fetch(`spots.json?cb=${Date.now()}`, { cache: 'no-store' });
       if (!response.ok) throw new Error('spots.json を読み込めません');
       const spots = await response.json();
       spot = spots[spotId] || spots['01'];
@@ -119,7 +123,23 @@
           return modelScene;
         }
       }
-      status.textContent = '準備ができました。ボタンを押してARを開始してください。';
+      if (!isAppleMobile && spot.companionModelGlb) {
+        try {
+          const companionUrl = `${spot.companionModelGlb}?v=${encodeURIComponent(spot.version || '1')}`;
+          companionScene = (await loader.loadAsync(companionUrl)).scene;
+          const companionBounds = new THREE.Box3().setFromObject(companionScene);
+          if (companionBounds.isEmpty()) throw new Error('吹き出しモデルに表示できる形状がありません');
+          console.info('Companion model ready', companionUrl, companionBounds.getSize(new THREE.Vector3()).toArray());
+        } catch (error) {
+          companionLoadError = error;
+          console.error('Companion model load failed', error);
+        }
+      }
+      status.textContent = companionLoadError
+        ? '吹き出しを読み込めませんでした。通信状態をご確認ください。'
+        : companionScene
+          ? 'ネズミと吹き出しの準備ができました。ボタンを押してARを開始してください。'
+          : '準備ができました。ボタンを押してARを開始してください。';
       startButton.disabled = false;
       startButton.textContent = 'ARを開始する';
       return modelScene;
@@ -193,20 +213,42 @@
         placedModel.scale.setScalar(modelScale);
         placedGroup.add(placedModel);
         scene.add(placedGroup);
-        if (spot.companionModelGlb) {
-          loader.load(spot.companionModelGlb, (gltf) => {
-            const companion = gltf.scene;
-            companion.position.set(0, modelYOffset + modelHeight + Number(spot.companionYOffset ?? 0.12), 0);
-            companion.scale.setScalar(Number(spot.companionScale ?? 1));
-            placedGroup.add(companion);
-          }, undefined, (error) => console.warn('Companion model load failed', error));
+        if (companionScene) {
+          const companion = cloneSkinnedModel(companionScene);
+          const scale = Number(spot.companionScale ?? 1);
+          companion.scale.setScalar(scale);
+          const bounds = new THREE.Box3().setFromObject(companion);
+          const center = bounds.getCenter(new THREE.Vector3());
+          // Center the plaque over the character and place its lowest point
+          // above the character, regardless of the model's original origin.
+          companion.position.set(
+            -center.x,
+            modelYOffset + modelHeight + Number(spot.companionYOffset ?? 0.12) - bounds.min.y,
+            -center.z
+          );
+          companion.traverse((object) => {
+            if (!object.isMesh) return;
+            const materials = Array.isArray(object.material) ? object.material : [object.material];
+            for (const material of materials) {
+              if (material) {
+                material.side = THREE.DoubleSide;
+                material.needsUpdate = true;
+              }
+            }
+          });
+          placedGroup.add(companion);
+          placedGroup.updateMatrixWorld(true);
         }
       }
       lastHitMatrix.decompose(placedGroup.position, placedGroup.quaternion, placedGroup.scale);
       placedGroup.visible = true;
       placedGroup.updateMatrixWorld(true);
-      arMessage.textContent = '配置しました。別の場所をタップすると置き直せます。';
-      status.textContent = 'ARに配置しました。';
+      arMessage.textContent = companionScene
+        ? 'ネズミと吹き出しを配置しました。別の場所をタップすると置き直せます。'
+        : companionLoadError
+          ? 'ネズミは配置しましたが、吹き出しを読み込めませんでした。'
+          : '配置しました。別の場所をタップすると置き直せます。';
+      status.textContent = companionScene ? 'ARにネズミと吹き出しを配置しました。' : 'ARに配置しました。';
       showExplanationAfterDelay();
     }
 
