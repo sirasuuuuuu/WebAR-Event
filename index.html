@@ -268,7 +268,7 @@
       const parentRotation = placedGroup.getWorldQuaternion(new THREE.Quaternion()).invert();
       towardViewer.applyQuaternion(parentRotation);
       // The baked plaque visible face points along local +Z.
-      companionFaceRig.rotation.y = Math.atan2(towardViewer.x, towardViewer.z);
+      companionFaceRig.rotation.y = Math.atan2(towardViewer.x, towardViewer.z) + Number(spot.companionFacingOffsetY ?? 0);
       companionFaceRig.updateMatrixWorld(true);
     }
 
