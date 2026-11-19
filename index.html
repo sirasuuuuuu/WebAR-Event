@@ -88,6 +88,7 @@
     let localSpace = null;
     let placedGroup = null;
     let placedModel = null;
+    let companionFaceRig = null;
     let lastHitMatrix = null;
     let explanationTimer = null;
 
@@ -215,6 +216,7 @@
         scene.add(placedGroup);
         if (companionScene) {
           const companion = cloneSkinnedModel(companionScene);
+          companionFaceRig = new THREE.Group();
           const scale = Number(spot.companionScale ?? 1);
           companion.scale.setScalar(scale);
           const bounds = new THREE.Box3().setFromObject(companion);
@@ -236,7 +238,8 @@
               }
             }
           });
-          placedGroup.add(companion);
+          companionFaceRig.add(companion);
+          placedGroup.add(companionFaceRig);
           placedGroup.updateMatrixWorld(true);
         }
       }
@@ -250,6 +253,23 @@
           : '配置しました。別の場所をタップすると置き直せます。';
       status.textContent = companionScene ? 'ARにネズミと吹き出しを配置しました。' : 'ARに配置しました。';
       showExplanationAfterDelay();
+    }
+
+    function faceCompanionToViewer() {
+      if (!spot?.companionFaceViewer || !companionFaceRig || !placedGroup || !camera) return;
+      placedGroup.updateMatrixWorld(true);
+      camera.updateMatrixWorld(true);
+      const cameraPosition = camera.getWorldPosition(new THREE.Vector3());
+      const companionPosition = companionFaceRig.getWorldPosition(new THREE.Vector3());
+      const towardViewer = cameraPosition.sub(companionPosition);
+      towardViewer.y = 0;
+      if (towardViewer.lengthSq() < 1e-8) return;
+      towardViewer.normalize();
+      const parentRotation = placedGroup.getWorldQuaternion(new THREE.Quaternion()).invert();
+      towardViewer.applyQuaternion(parentRotation);
+      // The baked plaque visible face points along local +Z.
+      companionFaceRig.rotation.y = Math.atan2(towardViewer.x, towardViewer.z);
+      companionFaceRig.updateMatrixWorld(true);
     }
 
     function onXRFrame(_time, frame) {
@@ -287,6 +307,7 @@
         camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
         camera.matrixWorldNeedsUpdate = true;
         camera.updateMatrixWorld(true);
+        faceCompanionToViewer();
         renderer.clearDepth();
         renderer.render(scene, camera);
       }
@@ -326,7 +347,7 @@
       if (renderer) { renderer.dispose(); renderer.domElement.remove(); }
       if (hitTestSource) hitTestSource.cancel();
       if (activeSession) activeSession.removeEventListener('select', placeModel);
-      renderer = null; gl = null; scene = null; camera = null; reticle = null; placedGroup = null; placedModel = null;
+      renderer = null; gl = null; scene = null; camera = null; reticle = null; placedGroup = null; placedModel = null; companionFaceRig = null;
       hitTestSource = null; localSpace = null; lastHitMatrix = null; activeSession = null;
       hitMarker.style.display = 'none'; explanationPanel.style.display = 'none'; arOverlay.hidden = true;
     }
