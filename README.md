@@ -7,6 +7,7 @@ QRコードを読み取り、ブラウザからイベントキャラクターを
 - Android向け `assets/character.glb` とiPhone Quick Look向け `assets/character.usdz` に新しいキャラクターを適用しています。
 - 古い箱モデルも `assets/test_box.glb` / `assets/test_box.usdz` として残しています。
 - QRごとの設定は `spots.json` に13件あります。本文や見出し、モデル、表示サイズ、解説の時間差、追加モデルを場所ごとに指定できます。
+- スポット02には、`assets/fukidasi/fukidasi-okujouteien.glb` をネズミの配置後に追加表示する設定を入れています。元モデルの大きさに合わせてAR表示を約75cm高に縮小しています。
 - URLは `https://<ユーザー名>.github.io/<リポジトリ名>/?spot=01` のようにし、末尾を `01` から `13` に変えてQRコードを作ります。
 - QRからARの紹介画面やプレビュー画面を挟まず、このスポット専用の開始画面を開きます。ブラウザの安全制限によりAR起動には利用者のタップが1回必要です。
 

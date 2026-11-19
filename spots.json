@@ -16,7 +16,7 @@
   "02": {
     "label": "スポット02", "title": "キャラクターに会いに行こう", "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb", "modelUsdz": "assets/character.usdz", "modelScale": 1,
-    "explanation": "", "explanationDelayMs": 2500, "companionModelGlb": null, "companionScale": 1, "companionYOffset": 0.12, "version": "20261118"
+    "explanation": "", "explanationDelayMs": 2500, "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien.glb", "companionScale": 0.06, "companionYOffset": 0.34, "version": "20261120-02"
   },
   "03": {
     "label": "スポット03", "title": "キャラクターに会いに行こう", "intro": "この場所の解説は、spots.json の explanation に入力してください。",
