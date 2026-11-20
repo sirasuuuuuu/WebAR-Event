@@ -175,7 +175,7 @@
       const ringGeometry = new THREE.RingGeometry(0.13, 0.18, 48);
       ringGeometry.rotateX(-Math.PI / 2);
       reticle = new THREE.Group();
-      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x168bff, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false });
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x286b4d, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false });
       const ring = new THREE.Mesh(ringGeometry, markerMaterial);
       ring.renderOrder = 10000;
       reticle.add(ring);
