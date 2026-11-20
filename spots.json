@@ -17,7 +17,7 @@
     "version": "20261118"
   },
   "02": {
-    "label": "スポット02(2114)",
+    "label": "スポット02(2128)",
     "title": "キャラクターに会いに行こう",
     "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb",
@@ -29,7 +29,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
-    "version": "20261120-bubble-v7",
+    "version": "20261120-bubble",
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0
   },
