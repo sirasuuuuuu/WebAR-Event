@@ -246,6 +246,7 @@
       lastHitMatrix.decompose(placedGroup.position, placedGroup.quaternion, placedGroup.scale);
       placedGroup.visible = true;
       placedGroup.updateMatrixWorld(true);
+      orientCompanionAtPlacement();
       arMessage.textContent = companionScene
         ? 'ネズミと吹き出しを配置しました。別の場所をタップすると置き直せます。'
         : companionLoadError
@@ -255,7 +256,7 @@
       showExplanationAfterDelay();
     }
 
-    function faceCompanionToViewer() {
+    function orientCompanionAtPlacement() {
       if (spot?.companionFaceViewer === false || !companionFaceRig || !placedGroup || !camera) return;
       placedGroup.updateMatrixWorld(true);
       camera.updateMatrixWorld(true);
@@ -307,7 +308,6 @@
         camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
         camera.matrixWorldNeedsUpdate = true;
         camera.updateMatrixWorld(true);
-        faceCompanionToViewer();
         renderer.clearDepth();
         renderer.render(scene, camera);
       }
