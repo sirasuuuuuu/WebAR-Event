@@ -12,6 +12,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -29,6 +30,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "version": "20261120-bubble",
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0
@@ -46,6 +48,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -63,6 +66,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -80,6 +84,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -97,6 +102,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -114,6 +120,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -131,6 +138,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -148,6 +156,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -165,6 +174,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -182,6 +192,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -199,6 +210,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
@@ -216,6 +228,7 @@
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
+    "companionZOffset": 0.15,
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0,
     "version": "20261118"
