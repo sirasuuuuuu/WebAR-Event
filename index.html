@@ -224,7 +224,7 @@
           // Center the plaque over the character and place its lowest point
           // above the character, regardless of the model's original origin.
           companion.position.set(
-            -center.x,
+            -center.x + Number(spot.companionXOffset ?? 0),
             modelYOffset + modelHeight + Number(spot.companionYOffset ?? 0.12) - bounds.min.y,
             -center.z
           );
@@ -256,7 +256,7 @@
     }
 
     function faceCompanionToViewer() {
-      if (!spot?.companionFaceViewer || !companionFaceRig || !placedGroup || !camera) return;
+      if (spot?.companionFaceViewer === false || !companionFaceRig || !placedGroup || !camera) return;
       placedGroup.updateMatrixWorld(true);
       camera.updateMatrixWorld(true);
       const cameraPosition = camera.getWorldPosition(new THREE.Vector3());
