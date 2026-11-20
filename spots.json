@@ -1,6 +1,6 @@
 {
   "01": {
-    "label": "スポット01",
+    "label": "赤い壁",
     "title": "キャラクターに会いに行こう",
     "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb",
@@ -18,7 +18,7 @@
     "version": "20261118"
   },
   "02": {
-    "label": "スポット02(2128)",
+    "label": "屋上庭園",
     "title": "キャラクターに会いに行こう",
     "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb",
@@ -36,7 +36,7 @@
     "companionFacingOffsetY": 0
   },
   "03": {
-    "label": "スポット03",
+    "label": "自由な立面",
     "title": "キャラクターに会いに行こう",
     "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb",
@@ -44,7 +44,7 @@
     "modelScale": 1,
     "explanation": "",
     "explanationDelayMs": 2500,
-    "companionModelGlb": "assets/fukidasi/tyoiego/GLB/c-fukidasi-ziyuheimen.glb",
+    "companionModelGlb": "assets/fukidasi/tyoiego/GLB/cfukidasi-ziruritumen.glb",
     "companionScale": 0.06,
     "companionXOffset": -0.10,
     "companionYOffset": -0.09,
