@@ -9,8 +9,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "02": {
@@ -40,8 +43,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "04": {
@@ -54,8 +60,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "05": {
@@ -68,8 +77,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "06": {
@@ -82,8 +94,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "07": {
@@ -96,8 +111,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "08": {
@@ -110,8 +128,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "09": {
@@ -124,8 +145,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "10": {
@@ -138,8 +162,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "11": {
@@ -152,8 +179,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "12": {
@@ -166,8 +196,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   },
   "13": {
@@ -180,8 +213,11 @@
     "explanation": "",
     "explanationDelayMs": 2500,
     "companionModelGlb": null,
-    "companionScale": 1,
-    "companionYOffset": 0.12,
+    "companionScale": 0.06,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
+    "companionFaceViewer": true,
+    "companionFacingOffsetY": 0,
     "version": "20261118"
   }
 }
