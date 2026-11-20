@@ -83,6 +83,7 @@
     let scene = null;
     let camera = null;
     let reticle = null;
+    let reticleMaterial = null;
     let activeSession = null;
     let hitTestSource = null;
     let localSpace = null;
@@ -91,6 +92,7 @@
     let companionFaceRig = null;
     let lastHitMatrix = null;
     let explanationTimer = null;
+    let arMessageTimer = null;
 
     async function loadSpot() {
       // GitHub Pages may cache JSON responses for 10 minutes. Use a unique URL
@@ -175,11 +177,11 @@
       const ringGeometry = new THREE.RingGeometry(0.13, 0.18, 48);
       ringGeometry.rotateX(-Math.PI / 2);
       reticle = new THREE.Group();
-      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x286b4d, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false });
-      const ring = new THREE.Mesh(ringGeometry, markerMaterial);
+      reticleMaterial = new THREE.MeshBasicMaterial({ color: 0x286b4d, transparent: true, opacity: 1, side: THREE.DoubleSide, depthTest: false, depthWrite: false, toneMapped: false });
+      const ring = new THREE.Mesh(ringGeometry, reticleMaterial);
       ring.renderOrder = 10000;
       reticle.add(ring);
-      const center = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 12), markerMaterial);
+      const center = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 12), reticleMaterial);
       center.position.y = 0.025;
       center.renderOrder = 10000;
       reticle.add(center);
@@ -203,6 +205,17 @@
         explanationPanel.textContent = spot.explanation;
         explanationPanel.style.display = 'block';
       }, Math.max(0, Number(spot.explanationDelayMs ?? 2500)));
+    }
+
+    function showTemporaryARMessage(message, durationMs = 5000) {
+      clearTimeout(arMessageTimer);
+      arMessage.textContent = message;
+      arMessage.style.display = 'block';
+      arMessageTimer = setTimeout(() => {
+        arMessage.textContent = '';
+        arMessage.style.display = 'none';
+        arMessageTimer = null;
+      }, durationMs);
     }
 
     function placeModel() {
@@ -247,11 +260,12 @@
       placedGroup.visible = true;
       placedGroup.updateMatrixWorld(true);
       orientCompanionAtPlacement();
-      arMessage.textContent = companionScene
+      if (reticleMaterial) reticleMaterial.opacity = 0.3;
+      showTemporaryARMessage(companionScene
         ? 'ネズミと吹き出しを配置しました。別の場所をタップすると置き直せます。'
         : companionLoadError
           ? 'ネズミは配置しましたが、吹き出しを読み込めませんでした。'
-          : '配置しました。別の場所をタップすると置き直せます。';
+          : '配置しました。別の場所をタップすると置き直せます。');
       status.textContent = companionScene ? 'ARにネズミと吹き出しを配置しました。' : 'ARに配置しました。';
       showExplanationAfterDelay();
     }
@@ -290,12 +304,18 @@
           reticle.updateMatrixWorld(true);
           reticle.visible = true;
           hitMarker.style.display = 'block';
-          if (!placedGroup) arMessage.textContent = '青い目印が出ました。ここに置くには画面をタップしてください。';
+          if (!placedGroup) {
+            arMessage.style.display = 'block';
+            arMessage.textContent = '緑の目印が出ました。ここに置くには画面をタップしてください。';
+          }
         } else {
           lastHitMatrix = null;
           reticle.visible = false;
           hitMarker.style.display = 'none';
-          if (!placedGroup) arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
+          if (!placedGroup) {
+            arMessage.style.display = 'block';
+            arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
+          }
         }
       }
       for (const view of viewerPose.views) {
@@ -317,6 +337,7 @@
       arOverlay.hidden = false;
       hitMarker.style.display = 'none';
       explanationPanel.style.display = 'none';
+      arMessage.style.display = 'block';
       arMessage.textContent = '床や机に向けて、スマホをゆっくり動かしてください。';
       status.textContent = '';
       try {
@@ -344,12 +365,13 @@
 
     async function cleanupAR() {
       clearTimeout(explanationTimer);
+      clearTimeout(arMessageTimer);
       if (renderer) { renderer.dispose(); renderer.domElement.remove(); }
       if (hitTestSource) hitTestSource.cancel();
       if (activeSession) activeSession.removeEventListener('select', placeModel);
-      renderer = null; gl = null; scene = null; camera = null; reticle = null; placedGroup = null; placedModel = null; companionFaceRig = null;
+      renderer = null; gl = null; scene = null; camera = null; reticle = null; reticleMaterial = null; placedGroup = null; placedModel = null; companionFaceRig = null;
       hitTestSource = null; localSpace = null; lastHitMatrix = null; activeSession = null;
-      hitMarker.style.display = 'none'; explanationPanel.style.display = 'none'; arOverlay.hidden = true;
+      arMessageTimer = null; hitMarker.style.display = 'none'; arMessage.style.display = 'block'; explanationPanel.style.display = 'none'; arOverlay.hidden = true;
     }
 
     startButton.addEventListener('click', () => {
