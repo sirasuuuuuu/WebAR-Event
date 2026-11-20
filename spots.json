@@ -22,7 +22,7 @@
     "modelScale": 1,
     "explanation": "",
     "explanationDelayMs": 2500,
-    "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien.glb",
+    "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien2.glb",
     "companionScale": 0.06,
     "companionXOffset": -0.45,
     "companionYOffset": -0.09,
