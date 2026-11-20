@@ -14,7 +14,7 @@
     "version": "20261118"
   },
   "02": {
-    "label": "スポット02(2049)",
+    "label": "スポット02(2056)",
     "title": "キャラクターに会いに行こう",
     "intro": "この場所の解説は、spots.json の explanation に入力してください。",
     "modelGlb": "assets/character.glb",
@@ -24,8 +24,8 @@
     "explanationDelayMs": 2500,
     "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien2.glb",
     "companionScale": 0.06,
-    "companionXOffset": -0.45,
-    "companionYOffset": -0.09,
+    "companionXOffset": 0.0,
+    "companionYOffset": 0.0,
     "version": "20261120-bubble-v7",
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0
