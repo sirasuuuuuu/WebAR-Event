@@ -24,8 +24,8 @@
     "explanationDelayMs": 2500,
     "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien2.glb",
     "companionScale": 0.06,
-    "companionXOffset": 0.0,
-    "companionYOffset": 0.0,
+    "companionXOffset": -0.10,
+    "companionYOffset": -0.09,
     "version": "20261120-bubble-v7",
     "companionFaceViewer": true,
     "companionFacingOffsetY": 0
