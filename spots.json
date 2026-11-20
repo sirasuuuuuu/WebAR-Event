@@ -25,9 +25,9 @@
     "companionModelGlb": "assets/fukidasi/fukidasi-okujouteien.glb",
     "companionScale": 0.06,
     "companionYOffset": 0.12,
-    "version": "20261120-bubble-v5",
+    "version": "20261120-bubble-v6",
     "companionFaceViewer": true,
-    "companionFacingOffsetY": 1.5707963267948966
+    "companionFacingOffsetY": 0
   },
   "03": {
     "label": "スポット03",
