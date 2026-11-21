@@ -8,7 +8,7 @@
     "modelScale": 1,
     "explanation": "",
     "explanationDelayMs": 2500,
-    "companionModelGlb": "assets/fukidasi/egodeta/GLB/ffukidasi-akaikabe.glb",
+    "companionModelGlb": "assets/fukidasi/egodeta/GLB/fukidasi-akaikabe.glb",
     "companionScale": 0.06,
     "companionXOffset": -0.0,
     "companionYOffset": -0.06,
