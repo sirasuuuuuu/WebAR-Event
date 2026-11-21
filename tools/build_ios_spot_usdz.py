@@ -74,10 +74,13 @@ def build_spot(spot_id: str, spot: dict) -> None:
     rat_objects = import_usdz(RAT_USDZ)
     rat_root = make_root(rat_objects, "Character")
     rat_min, rat_max = world_bounds(rat_objects)
-    rat_height = rat_max.y - rat_min.y
+    # Blender imports USDZ into its Z-up coordinate system. Keep the offset
+    # on Z here; the USD exporter converts the finished scene back to USD's
+    # Y-up coordinates for iOS Quick Look.
+    rat_height = rat_max.z - rat_min.z
     model_scale = float(spot.get("modelScale", 1))
     rat_root.scale = (model_scale, model_scale, model_scale)
-    rat_root.location.y = -rat_min.y * model_scale
+    rat_root.location.z = -rat_min.z * model_scale
 
     bubble_objects = import_usdz(bubble_path)
     bubble_root = make_root(bubble_objects, "SpeechBubble")
@@ -88,8 +91,8 @@ def build_spot(spot_id: str, spot: dict) -> None:
     bubble_root.scale = (scale, scale, scale)
     bubble_root.location = (
         -((bubble_min.x + bubble_max.x) * 0.5 * scale) + x_offset,
-        -rat_min.y * model_scale + rat_height * model_scale + y_offset - bubble_min.y * scale,
-        -((bubble_min.z + bubble_max.z) * 0.5 * scale),
+        -((bubble_min.y + bubble_max.y) * 0.5 * scale),
+        -rat_min.z * model_scale + rat_height * model_scale + y_offset - bubble_min.z * scale,
     )
 
     bpy.context.scene.unit_settings.system = "METRIC"
