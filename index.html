@@ -106,7 +106,7 @@
       document.querySelector('#title').textContent = spot.title || 'キャラクターに会いに行こう';
       document.querySelector('#intro').textContent = spot.intro || 'キャラクターをこの場所に登場させます。';
       viewer.setAttribute('src', `${spot.modelGlb}?v=${spot.version || '1'}`);
-      viewer.setAttribute('ios-src', `${spot.modelUsdz}?v=${spot.version || '1'}`);
+      viewer.setAttribute('ios-src', `${spot.iosModelUsdz || spot.modelUsdz}?v=${spot.version || '1'}`);
       return spot;
     }
 
