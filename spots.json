@@ -24,7 +24,7 @@
   "02": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "屋上庭園",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "近代建築の5原則の一つ屋上庭園です。従来の勾配屋根に代わり、フラットな屋上を緑化し、庭園として活用します。坂倉準三 の他の作品にも5原則が取り入れられており、師匠であるコルビジェへの敬意が感じられます。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -46,7 +46,7 @@
   "03": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "自由な立面",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "近代建築の5原則の1つである自由な立面。かつては壁で建物を支える構造が主流で、間取りに制限がありました。柱や梁で建物を支える構造が普及すると、  外壁が構造を支える必要がなくなり、窓の位置、大きさ、形状、ファサードなどを、自由に計画できるようになりました。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -68,7 +68,7 @@
   "04": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "床",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "テラゾーの床にひび割れが生じるのを抑えるため、真鍮(しんちゅう)の目地が入れられています。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -90,7 +90,7 @@
   "05": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "蛇紋石",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "蛇紋石(じゃもんせき)は、蛇の皮のような模様が特徴の天然石です。緑色をしており、磨くとツヤが出ます。エントランスと外の壁の一部に使われているので、ぜひ注目してみてください。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -112,7 +112,7 @@
   "06": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "カーペット",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "4階には限られた人だけが利用できる貴賓室があったため、階段にはカーペットが敷かれていました。カーペットには、防音性・滑り止めの役割があります。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -134,7 +134,7 @@
   "07": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "レストラン",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "地下には当時「マイアミ」というレストランがあり、喫茶や宴会などに利用されていたそうです。今回は、1960年代の喫茶店をイメージした、展示を行っています。ぜひ注目してみてください。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -156,7 +156,7 @@
   "08": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "ピロティ",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "近代建築の五原則の1つのピロティです。ピロティは、建物を壁ではなく柱で支え地上部分を開放する建築方法です。それにより生み出される視線の抜けや、内と外のつながりにぜひ注目してみてください。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -178,7 +178,7 @@
   "09": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "手すり",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "中産連ビルの特徴の一つである、アールを描く手すりです。手触りのよい滑らかな木と独特のアール形状が手に自然となじみます。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -200,7 +200,7 @@
   "10": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "カウンター",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "こちらのカウンターは竣工当時から残るオリジナルのものです。当時どのように使われていたのか、想像しながらみてください。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -222,7 +222,7 @@
   "11": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "椅子",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "中産連ビルの設計者である坂倉準三がデザインした椅子です。こちらの椅子は竣工当時から残るオリジナルのものです。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -244,7 +244,7 @@
   "12": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "窓",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "近代建築の五原則の1つである水平連続窓です。窓 を水平方向に連続して設けることで、外の景色を横に広く見渡せるだけでなく、室内に多くの光を取り込むことができます。ぜひ注目してみてください。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
@@ -266,7 +266,7 @@
   "13": {
     "label": "2026年11月21日 in 中産連ビル",
     "title": "自由な平面",
-    "intro": "この場所の解説は、spots.json の explanation に入力してください。",
+    "intro": "近代建築の五原則の1つである自由な平面。かつては壁で建物を支える構造が主流で、室内の間取りに制限がありました。柱や梁で建物を支えることで、用途に合わせた自由な間取りを実現できるようになりました。",
     "modelGlb": "assets/character.glb",
     "modelUsdz": "assets/character.usdz",
     "modelScale": 0.85,
