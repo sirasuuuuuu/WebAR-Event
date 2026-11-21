@@ -84,7 +84,7 @@ def build_spot(spot_id: str, spot: dict) -> None:
     bubble_min, bubble_max = world_bounds(bubble_objects)
     scale = float(spot.get("companionScale", 1))
     x_offset = float(spot.get("companionXOffset", 0))
-    y_offset = float(spot.get("companionYOffset", 0.12))
+    y_offset = float(spot.get("iosCompanionYOffset", spot.get("companionYOffset", 0.12)))
     bubble_root.scale = (scale, scale, scale)
     bubble_root.location = (
         -((bubble_min.x + bubble_max.x) * 0.5 * scale) + x_offset,
@@ -95,7 +95,8 @@ def build_spot(spot_id: str, spot: dict) -> None:
     bpy.context.scene.unit_settings.system = "METRIC"
     bpy.context.scene.unit_settings.scale_length = 1.0
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = OUTPUT_DIR / f"spot-{spot_id}-with-bubble.usdz"
+    output_path = ROOT / Path(spot.get("iosModelUsdz", f"assets/ios/spot-{spot_id}-with-bubble.usdz"))
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.usd_export(
         filepath=str(output_path),
         selected_objects_only=False,
